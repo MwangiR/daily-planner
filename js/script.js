@@ -1,7 +1,56 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+const currentDate = dayjs();
+const startTime = currentDate.set("hour", 9).set("minute", 0);
+const endTime = currentDate.set("hour", 17).set("minute", 0);
+
 $(function () {
+  const rootDivEl = $(".container-fluid");
+
+  console.log(rootDivEl);
+  console.log(startTime.format("hh:mm A"));
+  console.log(endTime.format("hh:mm A"));
+
+  //div element
+  const hourDiv = $("<div>")
+    .attr({
+      class: "row time-block past",
+    })
+    .appendTo(rootDivEl);
+
+  const hourColumn = $("<div>")
+    .attr({
+      class: "col-2 col-md-1 hour text-center py-3",
+    })
+    .appendTo(hourDiv);
+
+  const textAreaColumn = $("<textarea>")
+    .attr({
+      class: "col-8 col-md-10 description",
+      rows: 3,
+    })
+    .appendTo(hourDiv);
+
+  const saveBtn = $("<button>")
+    .attr({
+      class: "btn saveBtn col-2 col-md-1",
+      "aria-Label": "save",
+    })
+    .appendTo(hourDiv);
+
+  const saveBtnIcon = $("<i>")
+    .attr({
+      class: "fas fa-save",
+      "aria-hidden": "true",
+    })
+    .appendTo(saveBtn);
+
+  for (let i = startTime.hour(); i <= endTime.hour(); i++) {
+    const scheduleHour = currentDate.set("hour", i);
+    const formattedHour = scheduleHour.format("h A");
+  }
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
