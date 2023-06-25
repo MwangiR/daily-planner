@@ -13,42 +13,44 @@ $(function () {
   console.log(endTime.format("hh:mm A"));
 
   //div element
-  const hourDiv = $("<div>")
-    .attr({
-      class: "row time-block past",
-    })
-    .appendTo(rootDivEl);
-
-  const hourColumn = $("<div>")
-    .attr({
-      class: "col-2 col-md-1 hour text-center py-3",
-    })
-    .appendTo(hourDiv);
-
-  const textAreaColumn = $("<textarea>")
-    .attr({
-      class: "col-8 col-md-10 description",
-      rows: 3,
-    })
-    .appendTo(hourDiv);
-
-  const saveBtn = $("<button>")
-    .attr({
-      class: "btn saveBtn col-2 col-md-1",
-      "aria-Label": "save",
-    })
-    .appendTo(hourDiv);
-
-  const saveBtnIcon = $("<i>")
-    .attr({
-      class: "fas fa-save",
-      "aria-hidden": "true",
-    })
-    .appendTo(saveBtn);
-
   for (let i = startTime.hour(); i <= endTime.hour(); i++) {
     const scheduleHour = currentDate.set("hour", i);
     const formattedHour = scheduleHour.format("h A");
+
+    const hourDiv = $("<div>")
+      .attr({
+        id: `hour-${i}`,
+        class: "row time-block past",
+      })
+      .appendTo(rootDivEl);
+
+    const hourColumn = $("<div>")
+      .attr({
+        class: "col-2 col-md-1 hour text-center py-3",
+      })
+      .text(formattedHour)
+      .appendTo(hourDiv);
+
+    const textAreaColumn = $("<textarea>")
+      .attr({
+        class: "col-8 col-md-10 description",
+        rows: 3,
+      })
+      .appendTo(hourDiv);
+
+    const saveBtn = $("<button>")
+      .attr({
+        class: "btn saveBtn col-2 col-md-1",
+        "aria-label": "save",
+      })
+      .appendTo(hourDiv);
+
+    const saveBtnIcon = $("<i>")
+      .attr({
+        class: "fas fa-save",
+        "aria-hidden": "true",
+      })
+      .appendTo(saveBtn);
   }
 
   // TODO: Add a listener for click events on the save button. This code should
