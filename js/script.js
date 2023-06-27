@@ -8,6 +8,7 @@ $(function () {
   const endTime = currentDate.set("hour", 17).set("minute", 0);
 
   const rootDivEl = $(".container-fluid");
+  let hourDiv;
 
   function retrieveScheduleData() {
     const storedData = localStorage.getItem("timeSchedule");
@@ -31,7 +32,12 @@ $(function () {
   //retrieive schedule data on page load
   retrieveScheduleData();
 
-  function saveScheduleData(elementId, textVal) {
+  function showToast() {
+    const toast = new bootstrap.Toast($(".toast"));
+    toast.show();
+  }
+
+  function saveScheduleData(hourDiv, elementId, textVal) {
     if (textVal === null || textVal === "") {
       alert("Please input a schedule");
     } else {
@@ -41,6 +47,21 @@ $(function () {
       }
       timeSave.push({ id: elementId, text: textVal });
       localStorage.setItem("timeSchedule", JSON.stringify(timeSave));
+
+      const successAlert = $("<div>")
+        .attr({
+          class: "alert alert-primary",
+          role: "alert",
+          style: "margin:0; padding-right:20px; border-radius:20px; width:50rem;",
+        })
+        .text("Saved Successfully");
+
+      showToast();
+      //hourDiv.before(successAlert);
+
+      // setTimeout(() => {
+      // successAlert.remove();
+      //}, 3000);
     }
   }
 
@@ -54,7 +75,7 @@ $(function () {
     const scheduleHour = currentDate.set("hour", i);
     const formattedHour = scheduleHour.format("h A");
 
-    const hourDiv = $("<div>")
+    hourDiv = $("<div>")
       .attr({
         id: `hour-${i}-${formattedHour.slice(-2)}`,
         "data-time": `${i}`,
@@ -109,6 +130,6 @@ $(function () {
     const textVal = parentEl.find("textarea").val();
 
     //save schedule data
-    saveScheduleData(elementId, textVal);
+    saveScheduleData(parentEl, elementId, textVal);
   });
 });
