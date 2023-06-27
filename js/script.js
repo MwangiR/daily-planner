@@ -47,6 +47,7 @@ $(function () {
   console.log(rootDivEl);
   console.log(startTime.format("hh:mm A"));
   console.log(endTime.format("hh:mm A"));
+  console.log(currentDate.format("h"));
 
   //div element
   for (let i = startTime.hour(); i <= endTime.hour(); i++) {
@@ -56,9 +57,18 @@ $(function () {
     const hourDiv = $("<div>")
       .attr({
         id: `hour-${i}-${formattedHour.slice(-2)}`,
-        class: "row time-block past",
+        "data-time": `${i}`,
+        class: "row time-block",
       })
       .appendTo(rootDivEl);
+
+    if (i < currentDate.format("h")) {
+      hourDiv.attr("class", "row time-block past");
+    } else if (i > currentDate.format("h")) {
+      hourDiv.attr("class", "row time-block future");
+    } else {
+      hourDiv.attr("class", "row time-block present");
+    }
 
     const hourColumn = $("<div>")
       .attr({
