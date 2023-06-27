@@ -12,16 +12,19 @@ $(function () {
   function retrieveScheduleData() {
     const storedData = localStorage.getItem("timeSchedule");
     if (storedData) {
-      const storedObj = JSON.parse(storedData);
-      const elementId = storedObj.id;
-      const textVal = storedObj.text;
+      const storedArray = JSON.parse(storedData);
 
-      if (elementId && textVal) {
-        const targetElement = $("#" + elementId);
-        if (targetElement.length > 0) {
-          targetElement.find("textarea").val(textVal);
+      storedArray.forEach((storedObj) => {
+        const elementId = storedObj.id;
+        const textVal = storedObj.text;
+
+        if (elementId && textVal) {
+          const targetElement = $("#" + elementId);
+          if (targetElement.length > 0) {
+            targetElement.find("textarea").val(textVal);
+          }
         }
-      }
+      });
     }
   }
 
@@ -32,11 +35,12 @@ $(function () {
     if (textVal === null || textVal === "") {
       alert("Please input a schedule");
     } else {
-      const storedObj = {
-        id: elementId,
-        text: textVal,
-      };
-      localStorage.setItem("timeSchedule", JSON.stringify(storedObj));
+      let timeSave = JSON.parse(localStorage.getItem("timeSchedule")) || [];
+      if (!Array.isArray(timeSave)) {
+        timeSave = [];
+      }
+      timeSave.push({ id: elementId, text: textVal });
+      localStorage.setItem("timeSchedule", JSON.stringify(timeSave));
     }
   }
 
