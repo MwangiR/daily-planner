@@ -1,12 +1,44 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+
 $(function () {
   const currentDate = dayjs();
   const startTime = currentDate.set("hour", 9).set("minute", 0);
   const endTime = currentDate.set("hour", 17).set("minute", 0);
 
   const rootDivEl = $(".container-fluid");
+
+  function retrieveScheduleData() {
+    const storedData = localStorage.getItem("timeSchedule");
+    if (storedData) {
+      const storedObj = JSON.parse(storedData);
+      const elementId = storedObj.id;
+      const textVal = storedObj.text;
+
+      if (elementId && textVal) {
+        const targetElement = $("#" + elementId);
+        if (targetElement.length > 0) {
+          targetElement.find("textarea").val(textVal);
+        }
+      }
+    }
+  }
+
+  //retrieive schedule data on page load
+  retrieveScheduleData();
+
+  function saveScheduleData(elementId, textVal) {
+    if (textVal === null || textVal === "") {
+      alert("Please input a schedule");
+    } else {
+      const storedObj = {
+        id: elementId,
+        text: textVal,
+      };
+      localStorage.setItem("timeSchedule", JSON.stringify(storedObj));
+    }
+  }
 
   console.log(rootDivEl);
   console.log(startTime.format("hh:mm A"));
@@ -51,6 +83,9 @@ $(function () {
         "aria-hidden": "true",
       })
       .appendTo(saveBtn);
+
+    // retievev and display saved data for current hour div
+    retrieveScheduleData();
   }
 
   //eventListener
@@ -58,30 +93,8 @@ $(function () {
     const parentEl = $(this).closest(".time-block");
     const elementId = parentEl.attr("id");
     const textVal = parentEl.find("textarea").val();
-    if (textVal === null || textVal === "") {
-      alert("input schedule");
-      $(".saveBtn").attr("disabled");
-    } else {
-      console.log(elementId);
-      console.log(textVal);
-    }
+
+    //save schedule data
+    saveScheduleData(elementId, textVal);
   });
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
 });
