@@ -12,8 +12,6 @@ $(function () {
   console.log(startTime.format("hh:mm A"));
   console.log(endTime.format("hh:mm A"));
 
-  //eventListener
-
   //div element
   for (let i = startTime.hour(); i <= endTime.hour(); i++) {
     const scheduleHour = currentDate.set("hour", i);
@@ -55,12 +53,18 @@ $(function () {
       .appendTo(saveBtn);
   }
 
+  //eventListener
   $(".time-block button").on("click", function () {
     const parentEl = $(this).closest(".time-block");
     const elementId = parentEl.attr("id");
     const textVal = parentEl.find("textarea").val();
-    console.log(elementId);
-    console.log(textVal);
+    if (textVal === null || textVal === "") {
+      alert("input schedule");
+      $(".saveBtn").attr("disabled");
+    } else {
+      console.log(elementId);
+      console.log(textVal);
+    }
   });
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
