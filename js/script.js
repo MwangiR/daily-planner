@@ -4,9 +4,11 @@
 
 $(function () {
   const currentDate = dayjs();
+  //for test purposes one can change start time to ("hour", 0)
+  //and endtime to ("hour", 23)
+  //to see past present and future
   const startTime = currentDate.set("hour", 9).set("minute", 0);
   const endTime = currentDate.set("hour", 17).set("minute", 0);
-
   const rootDivEl = $(".container-fluid");
   let hourDiv;
 
@@ -62,35 +64,23 @@ $(function () {
     toast.show();
   }
 
-  function alertToast(alertMsg) {
-    const alertToastContainer = $("<div>")
-      .attr({
-        class: "toast position-fixed top-0 end-0 me-3 p-3 bg-danger",
-        role: "alert",
-        ariaLive: "assertive",
-        ariaAtomic: "true",
-      })
-      .appendTo(rootDivEl);
-
-    const liveToast = $("<div>")
-      .attr({
-        class: "toast-body",
-      })
-      .text(alertMsg)
-      .appendTo(alertToastContainer);
-
-    const alertToast = new bootstrap.Toast(alertToastContainer);
-    alertToast.show();
-  }
-
-  function saveScheduleData(hourDiv, elementId, textVal) {
+  function saveScheduleData(elementId, textVal) {
     if (textVal === null || textVal === "") {
-      alertToast("Please input Task");
+      //alertToast("Please input Task");
+      showToast("Please input Task", "bg-danger");
+      return;
     } else {
       let timeSave = JSON.parse(localStorage.getItem("timeSchedule")) || [];
       if (!Array.isArray(timeSave)) {
         timeSave = [];
       }
+      //check if the textval is the same as storedvalue
+      const storedTextVal = timeSave.find((obj) => obj.id === elementId)?.text;
+      if (storedTextVal && textVal.length === storedTextVal.length) {
+        showToast("Similar tast present", "bg-warning");
+        return;
+      }
+
       timeSave.push({ id: elementId, text: textVal });
       localStorage.setItem("timeSchedule", JSON.stringify(timeSave));
 
@@ -106,12 +96,12 @@ $(function () {
   console.log(rootDivEl);
   console.log(startTime.format("hh:mm A"));
   console.log(endTime.format("hh:mm A"));
-  console.log(currentDate.format("h"));
+  // console.log(currentDate.format("h"));
 
   //div element
   for (let i = startTime.hour(); i <= endTime.hour(); i++) {
     const scheduleHour = currentDate.set("hour", i);
-    const formattedHour = scheduleHour.format("h A");
+    const formattedHour = scheduleHour.format("ha");
 
     hourDiv = $("<div>")
       .attr({
@@ -120,14 +110,6 @@ $(function () {
         class: "row time-block",
       })
       .appendTo(rootDivEl);
-
-    if (i < currentDate.format("h")) {
-      hourDiv.attr("class", "row time-block past");
-    } else if (i > currentDate.format("h")) {
-      hourDiv.attr("class", "row time-block future");
-    } else {
-      hourDiv.attr("class", "row time-block present");
-    }
 
     const hourColumn = $("<div>")
       .attr({
@@ -157,6 +139,18 @@ $(function () {
       })
       .appendTo(saveBtn);
 
+    const hourTime = dayjs().hour(i).startOf("hour");
+    console.log(dayjs().format("H"));
+    console.log(hourTime);
+
+    if (hourTime.isBefore(dayjs(), "hour")) {
+      hourDiv.addClass("past");
+    } else if (hourTime.isAfter(dayjs(), "hour")) {
+      hourDiv.addClass("future");
+    } else {
+      hourDiv.addClass("present");
+    }
+
     // retievev and display saved data for current hour div
     retrieveScheduleData();
   }
@@ -168,6 +162,6 @@ $(function () {
     const textVal = parentEl.find("textarea").val();
 
     //save schedule data
-    saveScheduleData(parentEl, elementId, textVal);
+    saveScheduleData(elementId, textVal);
   });
 });
