@@ -32,14 +32,60 @@ $(function () {
   //retrieive schedule data on page load
   retrieveScheduleData();
 
-  function showToast() {
-    const toast = new bootstrap.Toast($(".toast"));
+  function showToast(message, background) {
+    const toastContainer = $("<div>")
+      .attr({
+        class: "toast-container position-fixed top-0 end-0 p-3",
+        role: "alert",
+        ariaLive: "assertive",
+        ariaAtomic: "true",
+      })
+      .appendTo(rootDivEl);
+
+    const liveToast = $("<div>")
+      .attr({
+        id: "liveToast",
+        class: "toast",
+        role: "alert",
+        ariaLive: "assertive",
+        ariaAtomic: "true",
+      })
+      .appendTo(toastContainer);
+
+    const toastBody = $("<div>").text(message).appendTo(liveToast);
+
+    if (background) {
+      toastBody.removeClass().addClass(`toast-body ${background} text-white`);
+    }
+
+    const toast = new bootstrap.Toast(liveToast);
     toast.show();
+  }
+
+  function alertToast(alertMsg) {
+    const alertToastContainer = $("<div>")
+      .attr({
+        class: "toast position-fixed top-0 end-0 me-3 p-3 bg-danger",
+        role: "alert",
+        ariaLive: "assertive",
+        ariaAtomic: "true",
+      })
+      .appendTo(rootDivEl);
+
+    const liveToast = $("<div>")
+      .attr({
+        class: "toast-body",
+      })
+      .text(alertMsg)
+      .appendTo(alertToastContainer);
+
+    const alertToast = new bootstrap.Toast(alertToastContainer);
+    alertToast.show();
   }
 
   function saveScheduleData(hourDiv, elementId, textVal) {
     if (textVal === null || textVal === "") {
-      alert("Please input a schedule");
+      alertToast("Please input Task");
     } else {
       let timeSave = JSON.parse(localStorage.getItem("timeSchedule")) || [];
       if (!Array.isArray(timeSave)) {
@@ -48,20 +94,12 @@ $(function () {
       timeSave.push({ id: elementId, text: textVal });
       localStorage.setItem("timeSchedule", JSON.stringify(timeSave));
 
-      const successAlert = $("<div>")
-        .attr({
-          class: "alert alert-primary",
-          role: "alert",
-          style: "margin:0; padding-right:20px; border-radius:20px; width:50rem;",
-        })
-        .text("Saved Successfully");
-
-      showToast();
-      //hourDiv.before(successAlert);
+      showToast("Saved successfully", "bg-primary");
+      // hourDiv.before(successAlert);
 
       // setTimeout(() => {
-      // successAlert.remove();
-      //}, 3000);
+      //   successAlert.remove();
+      // }, 3000);
     }
   }
 
