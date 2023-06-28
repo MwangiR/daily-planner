@@ -81,7 +81,15 @@ $(function () {
         return;
       }
 
-      timeSave.push({ id: elementId, text: textVal });
+      //stores values with similar ids instead of creating objects with the same ID
+      const existingObjIndex = timeSave.findIndex((obj) => obj.id === elementId);
+      if (existingObjIndex !== -1) {
+        timeSave[existingObjIndex].text = textVal;
+      } else {
+        timeSave.push({ id: elementId, text: textVal });
+      }
+
+      //timeSave.push({ id: elementId, text: textVal });
       localStorage.setItem("timeSchedule", JSON.stringify(timeSave));
 
       showToast("Saved successfully", "bg-primary");
