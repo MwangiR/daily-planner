@@ -12,6 +12,12 @@ $(function () {
   const rootDivEl = $(".container-fluid");
   let hourDiv;
 
+  const displayCurrentDate = $("#currentDay").text(currentDate.format("dddd DD, MMMM YYYY"));
+
+  console.log(rootDivEl);
+  console.log(startTime.format("hh:mm A"));
+  console.log(endTime.format("hh:mm A"));
+
   function retrieveScheduleData() {
     const storedData = localStorage.getItem("timeSchedule");
     if (storedData) {
@@ -101,9 +107,6 @@ $(function () {
     }
   }
 
-  console.log(rootDivEl);
-  console.log(startTime.format("hh:mm A"));
-  console.log(endTime.format("hh:mm A"));
   // console.log(currentDate.format("h"));
 
   //div element
@@ -148,8 +151,6 @@ $(function () {
       .appendTo(saveBtn);
 
     const hourTime = dayjs().hour(i).startOf("hour");
-    console.log(dayjs().format("H"));
-    console.log(hourTime);
 
     if (hourTime.isBefore(dayjs(), "hour")) {
       hourDiv.addClass("past");
