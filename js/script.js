@@ -12,12 +12,18 @@ $(function () {
   const rootDivEl = $(".container-fluid");
   let hourDiv;
 
+  //display current date
   const displayCurrentDate = $("#currentDay").text(currentDate.format("dddd DD, MMMM YYYY"));
 
   console.log(rootDivEl);
   console.log(startTime.format("hh:mm A"));
   console.log(endTime.format("hh:mm A"));
 
+  /**
+   * Retrieve schedule data from local storage and update the corresponding elements.
+   *
+   * @return {undefined} No return value.
+   */
   function retrieveScheduleData() {
     const storedData = localStorage.getItem("timeSchedule");
     if (storedData) {
@@ -40,6 +46,13 @@ $(function () {
   //retrieive schedule data on page load
   retrieveScheduleData();
 
+  /**
+   * Create and display a toast message.
+   *
+   * @param {string} message - The message to display in the toast.
+   * @param {string} background - The background color of the toast.
+   * @return {undefined} This function does not return a value.
+   */
   function showToast(message, background) {
     const toastContainer = $("<div>")
       .attr({
@@ -70,12 +83,19 @@ $(function () {
     toast.show();
   }
 
+  /**
+   * Saves schedule data.
+   *
+   * @param {string} elementId - The ID of the element.
+   * @param {string} textVal - The value of the text.
+   */
   function saveScheduleData(elementId, textVal) {
     if (textVal === null || textVal === "") {
       //alertToast("Please input Task");
       showToast("Please input Task", "bg-danger");
       return;
     } else {
+      //get the stored data
       let timeSave = JSON.parse(localStorage.getItem("timeSchedule")) || [];
       if (!Array.isArray(timeSave)) {
         timeSave = [];
@@ -83,7 +103,7 @@ $(function () {
       //check if the textval is the same as storedvalue
       const storedTextVal = timeSave.find((obj) => obj.id === elementId)?.text;
       if (storedTextVal && textVal.length === storedTextVal.length) {
-        showToast("Similar tast present", "bg-warning");
+        showToast("Similar task present", "bg-warning");
         return;
       }
 
@@ -99,17 +119,13 @@ $(function () {
       localStorage.setItem("timeSchedule", JSON.stringify(timeSave));
 
       showToast("Saved successfully", "bg-primary");
-      // hourDiv.before(successAlert);
-
-      // setTimeout(() => {
-      //   successAlert.remove();
-      // }, 3000);
     }
   }
 
   // console.log(currentDate.format("h"));
 
-  //div element
+  //div element(iterates through start time and end time creating time boxes for each hour)
+  //sets id as hour
   for (let i = startTime.hour(); i <= endTime.hour(); i++) {
     const scheduleHour = currentDate.set("hour", i);
     const formattedHour = scheduleHour.format("ha");
@@ -150,6 +166,7 @@ $(function () {
       })
       .appendTo(saveBtn);
 
+    //check if the hour is past, present or future
     const hourTime = dayjs().hour(i).startOf("hour");
 
     if (hourTime.isBefore(dayjs(), "hour")) {
