@@ -21,7 +21,15 @@ The main purpose of this code is to create a schedule planner that allows users 
 To use this code, follow these steps:
 
 Make sure you have the jQuery library included in your HTML file.
-Wrap all the code that interacts with the DOM inside a $(function () {}) function to ensure it runs after the browser has finished rendering all the elements in the HTML.
+Wrap all the code that interacts with the DOM inside a
+
+```Javascript
+$(function () {
+    // Your code here
+})
+```
+
+function to ensure it runs after the browser has finished rendering all the elements in the HTML.
 
 # Displaying Current Date
 
@@ -47,5 +55,6 @@ The code dynamically creates time blocks for each hour between a specified start
 
 An event listener is added to the save buttons within the time blocks. When a save button is clicked, the corresponding parent time block element is identified, and the ID and value of the textarea within that time block are passed to the saveScheduleData function to save the task.
 
-N# ote
+### Note
+
 This README provides an overview of the code functionality and usage. Additional information about external dependencies and integration into a larger project may be necessary.
