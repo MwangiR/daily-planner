@@ -34,6 +34,7 @@ function to ensure it runs after the browser has finished rendering all the elem
 # Displaying Current Date
 
 The code retrieves the current date using the dayjs library and displays it in the #currentDay element.
+[Day.js Docs](https://day.js.org/docs/en/installation/installation)
 
 # Retrieving Schedule Data
 
